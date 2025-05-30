@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		EB552E572DE9ACB800738D9B /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = EB552E552DE9ACB200738D9B /* .gitignore */; };
+		EB552E592DE9AD7000738D9B /* ibeaconroll-ios-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EB552E582DE9AD7000738D9B /* ibeaconroll-ios-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,6 +33,7 @@
 		EB552E382DE9AA8600738D9B /* iOS_iBeaconRollTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iOS_iBeaconRollTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB552E422DE9AA8600738D9B /* iOS_iBeaconRollUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iOS_iBeaconRollUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB552E552DE9ACB200738D9B /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		EB552E582DE9AD7000738D9B /* ibeaconroll-ios-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ibeaconroll-ios-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -85,6 +87,7 @@
 				EB552E452DE9AA8600738D9B /* iOS_iBeaconRollUITests */,
 				EB552E282DE9AA8500738D9B /* Products */,
 				EB552E552DE9ACB200738D9B /* .gitignore */,
+				EB552E582DE9AD7000738D9B /* ibeaconroll-ios-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -219,6 +222,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EB552E572DE9ACB800738D9B /* .gitignore in Resources */,
+				EB552E592DE9AD7000738D9B /* ibeaconroll-ios-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
