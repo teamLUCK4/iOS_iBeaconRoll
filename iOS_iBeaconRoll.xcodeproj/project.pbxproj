@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		EB552E572DE9ACB800738D9B /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = EB552E552DE9ACB200738D9B /* .gitignore */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		EB552E392DE9AA8600738D9B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,6 +31,7 @@
 		EB552E272DE9AA8500738D9B /* iOS_iBeaconRoll.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iOS_iBeaconRoll.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB552E382DE9AA8600738D9B /* iOS_iBeaconRollTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iOS_iBeaconRollTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB552E422DE9AA8600738D9B /* iOS_iBeaconRollUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iOS_iBeaconRollUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		EB552E552DE9ACB200738D9B /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -79,6 +84,7 @@
 				EB552E3B2DE9AA8600738D9B /* iOS_iBeaconRollTests */,
 				EB552E452DE9AA8600738D9B /* iOS_iBeaconRollUITests */,
 				EB552E282DE9AA8500738D9B /* Products */,
+				EB552E552DE9ACB200738D9B /* .gitignore */,
 			);
 			sourceTree = "<group>";
 		};
@@ -212,6 +218,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EB552E572DE9ACB800738D9B /* .gitignore in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
