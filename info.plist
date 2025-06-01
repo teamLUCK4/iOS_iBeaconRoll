@@ -2,6 +2,11 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSLocalNetworkUsageDescription
+NSLocalNetworkUsageDescription
+</key>
+	<string>이 앱은 같은 네트워크에 있는 장치와 통신하기 위해 로컬 네트워크를 사용합니다.
+이 앱은 같은 네트워크에 있는 장치와 통신하기 위해 로컬 네트워크를 사용합니다.</string>
 	<key>CFBundleIdentifier</key>
 	<string></string>
 	<key>NSAppTransportSecurity</key>

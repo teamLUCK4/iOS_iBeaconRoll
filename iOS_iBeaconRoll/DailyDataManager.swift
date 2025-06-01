@@ -12,7 +12,7 @@ class DailyDataManager {
     
     private let cacheKey = "cachedData"
     private let dateKey = "lastFetchDate"
-    private let apiURL = URL(string: "http://localhost:8080/api/students/1/schedule/today")!
+    private let apiURL = URL(string: "http://192.168.4.12:8080/api/students/1/schedule/today")!
     
     private init() {}
     
