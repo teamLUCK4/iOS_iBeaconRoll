@@ -7,6 +7,8 @@
 
 import UIKit
 import CoreLocation
+import CoreBluetooth
+
 
 class RangeBeaconViewController: UIViewController, CLLocationManagerDelegate {
 
@@ -18,8 +20,13 @@ class RangeBeaconViewController: UIViewController, CLLocationManagerDelegate {
     
     var hasSentRequest = false
 
+    var bluetoothManager: CBCentralManager?  // ✅ 블루투스 매니저 선언
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // ✅ Bluetooth 권한 요청 트리거
+        bluetoothManager = CBCentralManager(delegate: nil, queue: nil)
                 
         // ✅ iBeacon 위치 권한 설정 및 delegate 연결
         locationManager.delegate = self
@@ -96,7 +103,7 @@ class RangeBeaconViewController: UIViewController, CLLocationManagerDelegate {
         // ✅ 가까운 비콘이 있으면 한 번만 서버 요청 보내기
         if !hasSentRequest, let nearest = allBeacons.first, nearest.proximity == .immediate {
             hasSentRequest = true
-            sendAttendanceUpdate()
+//            sendAttendanceUpdate()
         }
     }
     
