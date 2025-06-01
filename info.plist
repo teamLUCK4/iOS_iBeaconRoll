@@ -2,11 +2,24 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CFBundleIdentifier</key>
+	<string></string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>NSFileProviderDomainUsageDescription</key>
+	<string></string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>비콘을 감지하려면 위치 권한이 필요합니다.
+비콘을 감지하려면 위치 권한이 필요합니다.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Location is needed to range for beacons.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Location is needed to range for beacons.</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Bluetooth is needed to turn your device into a beacon.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>voip</string>
