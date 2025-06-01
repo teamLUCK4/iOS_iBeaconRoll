@@ -8,6 +8,10 @@
 import UIKit
 import CoreLocation
 
+extension Notification.Name {
+    static let attendanceUpdateSuccess = Notification.Name("attendanceUpdateSuccess")
+}
+
 class RangeBeaconViewController: UIViewController, CLLocationManagerDelegate {
 
     let defaultUUID = "ADD8CE0A-EF05-4B57-AD8C-7651198EAB2C"
@@ -135,6 +139,13 @@ class RangeBeaconViewController: UIViewController, CLLocationManagerDelegate {
 
             if let httpResponse = response as? HTTPURLResponse {
                 print("✅ 요청 완료 - 응답 코드: \(httpResponse.statusCode)")
+                
+                // 성공적인 응답을 받았을 때 NotificationCenter를 통해 알림
+                if httpResponse.statusCode == 200 {
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(name: .attendanceUpdateSuccess, object: nil)
+                    }
+                }
             }
 
             if let data = data,
