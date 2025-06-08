@@ -14,10 +14,12 @@ struct RangeBeaconView: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> RangeBeaconViewController {
         let viewController = RangeBeaconViewController()
         viewController.attendanceViewModel = attendanceViewModel
+        attendanceViewModel.beaconViewController = viewController
         return viewController
     }
     
     func updateUIViewController(_ uiViewController: RangeBeaconViewController, context: Context) {
         uiViewController.attendanceViewModel = attendanceViewModel
+        attendanceViewModel.beaconViewController = uiViewController
     }
 }

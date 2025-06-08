@@ -22,7 +22,9 @@ struct ContentView: View {
             AttendanceView(viewModel: viewModel)
         } else {
             ZStack {
+                // RangeBeaconView를 맨 위로 이동하고 opacity 제거
                 RangeBeaconView(attendanceViewModel: viewModel)
+                    .edgesIgnoringSafeArea(.all)
                 
                 // 배경 그라데이션
                 LinearGradient(
@@ -31,6 +33,7 @@ struct ContentView: View {
                     endPoint: .bottomTrailing
                 )
                 .ignoresSafeArea()
+                .allowsHitTesting(false)  // 터치 이벤트가 뒤로 전달되도록
                 
                 VStack(spacing: 20) {
                     // 로딩 텍스트
@@ -105,11 +108,6 @@ struct ContentView: View {
                         .padding(.top, 10)
                     }
                 }
-                
-                // RangeBeaconView 오버레이 (반투명)
-                RangeBeaconView(attendanceViewModel: viewModel)
-                    .edgesIgnoringSafeArea(.all)
-                    .opacity(0.3)
             }
             .onAppear {
                 loadDailyData()

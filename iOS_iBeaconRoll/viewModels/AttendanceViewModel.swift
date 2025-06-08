@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import UIKit
 
 // MARK: - 출석 관리 ViewModel
 /**
@@ -22,27 +23,19 @@ class AttendanceViewModel: ObservableObject {
     @Published var error: Error?
     
     private var timer: Timer?
+    weak var beaconViewController: RangeBeaconViewController?
     
     init() {
         loadTodaySchedule()
-        startTimer()
     }
     
     deinit {
-        timer?.invalidate()
     }
     
     private func loadTodaySchedule() {
         fetchDailySchedule()
     }
     
-    private func startTimer() {
-        print("⏰ 스케줄 업데이트 타이머 시작 (10초 간격)")
-        timer = Timer.scheduledTimer(withTimeInterval: 10, repeats: true) { _ in
-            print("🔄 10초 주기 스케줄 업데이트 실행")
-            self.fetchDailySchedule()
-        }
-    }
     
     private func updateScheduleStatus() {
         let now = Date()
@@ -55,32 +48,19 @@ class AttendanceViewModel: ObservableObject {
             }
         }
     }
-
+    
     /**
      * 서버에서 일일 스케줄 데이터를 가져오는 메서드
      * - 네트워크 요청을 통해 최신 스케줄 정보 동기화
      * - 로딩 상태와 에러 처리 포함
      */
     func fetchDailySchedule() {
-        print("📅 일일 스케줄 데이터 가져오기 시작")
-        isLoading = true
-        error = nil
-        
-        DailyDataManager.shared.getDailyData { [weak self] result in
+        print("📅 Fetching daily schedule...")
+        if let dailySchedule = DailyDataManager.shared.getCachedData() {
             DispatchQueue.main.async {
-                switch result {
-                case .success(let schedule):
-                    print("✅ 스케줄 업데이트 성공")
-                    print("📚 현재 수업 목록:")
-                    for classInfo in schedule.classes {
-                        print("- \(classInfo.subjectName) (\(classInfo.startTime) ~ \(classInfo.endTime))")
-                    }
-                    self?.schedules = schedule.classes
-                case .failure(let error):
-                    print("❌ 스케줄 업데이트 실패: \(error.localizedDescription)")
-                    self?.error = error
-                }
-                self?.isLoading = false
+                self.schedules = dailySchedule.classes
+                print("✅ Schedule updated with \(self.schedules.count) classes")
+                self.objectWillChange.send()
             }
         }
     }
@@ -90,31 +70,31 @@ class AttendanceViewModel: ObservableObject {
         schedules[index].attendanceStatus = AttendanceStatus.ongoing
     }
     
-//    func requestCheckOut(at index: Int) {
-//        selectedScheduleIndex = index
-//        let schedule = schedules[index]
-//        let now = Date()
-//
-//        // 수업 시간이 끝나지 않았으면 경고 표시
-//        if now < schedule.endTime {
-//            showPreventionAlert = true
-//        } else {
-//            performCheckOut(at: index)
-//        }
-//    }
+    //    func requestCheckOut(at index: Int) {
+    //        selectedScheduleIndex = index
+    //        let schedule = schedules[index]
+    //        let now = Date()
+    //
+    //        // 수업 시간이 끝나지 않았으면 경고 표시
+    //        if now < schedule.endTime {
+    //            showPreventionAlert = true
+    //        } else {
+    //            performCheckOut(at: index)
+    //        }
+    //    }
     
-//    func performCheckOut(at index: Int) {
-//        // 출석 시간만 관리한다면, attendanceTime만 갱신
-//        schedules[index].checkOutTime = AttendanceTime(string: "", valid: true, time: Date())
-//        schedules[index].attendanceStatus = .completed
-//        showPreventionAlert = false
-//        selectedScheduleIndex = nil
-//    }
+    //    func performCheckOut(at index: Int) {
+    //        // 출석 시간만 관리한다면, attendanceTime만 갱신
+    //        schedules[index].checkOutTime = AttendanceTime(string: "", valid: true, time: Date())
+    //        schedules[index].attendanceStatus = .completed
+    //        showPreventionAlert = false
+    //        selectedScheduleIndex = nil
+    //    }
     
-//    func emergencyCheckOut() {
-//        guard let index = selectedScheduleIndex else { return }
-//        performCheckOut(at: index)
-//    }
+    //    func emergencyCheckOut() {
+    //        guard let index = selectedScheduleIndex else { return }
+    //        performCheckOut(at: index)
+    //    }
     
     func getElapsedTime(for schedule: Class) -> String {
         guard schedule.attendanceTime.valid,

@@ -89,9 +89,9 @@ class DailyDataManager {
             }
             
             // Print raw JSON response
-            if let jsonString = String(data: data, encoding: .utf8) {
-                // print("📦 [API RAW JSON] \(jsonString)")
-            }
+//            if let jsonString = String(data: data, encoding: .utf8) {
+//                // print("📦 [API RAW JSON] \(jsonString)")
+//            }
             
             do {
                 let decoder = JSONDecoder()

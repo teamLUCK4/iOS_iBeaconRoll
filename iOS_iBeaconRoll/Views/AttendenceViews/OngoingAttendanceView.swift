@@ -24,11 +24,12 @@ struct OngoingAttendanceView: View {
     }
     
     private var subtitleText: String {
-        guard schedule.attendanceTime.valid == true else { return "" }
+        guard schedule.attendanceTime.valid == true,
+              let time = schedule.attendanceTime.time else { return "" }
         let formatter = DateFormatter()
         formatter.timeStyle = .short
         formatter.locale = Locale(identifier: "ko_KR")
-        return "입실: \(formatter.string(from: schedule.attendanceTime.time!)) | 경과시간: \(viewModel.getElapsedTime(for: schedule))"
+        return "입실: \(formatter.string(from: time)) | 경과시간: \(viewModel.getElapsedTime(for: schedule))"
     }
 }
 

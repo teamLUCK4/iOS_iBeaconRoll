@@ -12,15 +12,15 @@ import CoreBluetooth
 
 class RangeBeaconViewController: UIViewController, CLLocationManagerDelegate, CBCentralManagerDelegate {
 
-    // 현재 수업의 UUID를 가져오는 computed property
-    var defaultUUID: String {
-        if let currentClass = DailyDataManager.shared.getCurrentClass() {
-            print("🚨 UUID to detect :",currentClass.beaconInfo.uuid)
-            return currentClass.beaconInfo.uuid
-        }else {
-            print("no uuid")
-            return "NO-UUID"
+    // 오늘의 모든 수업 UUID를 가져오는 computed property
+    var todayUUIDs: [String] {
+        if let dailySchedule = DailyDataManager.shared.getCachedData() {
+            let uuids = dailySchedule.classes.map { $0.beaconInfo.uuid }
+            print("🚨 UUIDs to detect:", uuids)
+            return uuids
         }
+        print("no uuids")
+        return []
     }
     
     var locationManager = CLLocationManager()
@@ -46,27 +46,42 @@ class RangeBeaconViewController: UIViewController, CLLocationManagerDelegate, CB
         // ✅ SwiftUI에서 안 보이는 문제 방지
         view.backgroundColor = .clear
 
-//        // [테스트 용] 캐시 초기화
+//         [테스트 용] 캐시 초기화
 //        DailyDataManager.shared.clearCache()
 
         // ✅ 앱 실행하자마자 기본 UUID 감지 시작
         startBeaconMonitoring()
     }
 
-    private func startBeaconMonitoring() {
-        if let uuid = UUID(uuidString: defaultUUID) {
-            let constraint = CLBeaconIdentityConstraint(uuid: uuid, major: 100, minor: 0)
-            self.beaconConstraints[constraint] = []
+    func startBeaconMonitoring() {
+        // 기존 모니터링 중지
+        for constraint in beaconConstraints.keys {
+            if let region = locationManager.monitoredRegions.first(where: { $0.identifier == constraint.uuid.uuidString }) {
+                locationManager.stopMonitoring(for: region)
+                locationManager.stopRangingBeacons(satisfying: constraint)
+            }
+        }
+        beaconConstraints.removeAll()
+        
+        // 오늘의 모든 수업 UUID에 대해 모니터링 시작
+        for uuidString in todayUUIDs {
+            if let uuid = UUID(uuidString: uuidString) {
+                print("🔍 비콘 모니터링 시작 - UUID: \(uuid.uuidString)")
+                let constraint = CLBeaconIdentityConstraint(uuid: uuid, major: 100, minor: 0)
+                self.beaconConstraints[constraint] = []
 
-            let beaconRegion = CLBeaconRegion(beaconIdentityConstraint: constraint, identifier: uuid.uuidString)
-            beaconRegion.notifyEntryStateOnDisplay = true  // 디스플레이가 켜져있을 때도 감지
-            beaconRegion.notifyOnEntry = true  // 영역 진입 시 알림
-            beaconRegion.notifyOnExit = true   // 영역 이탈 시 알림
-            
-            self.locationManager.startMonitoring(for: beaconRegion)
-            self.locationManager.startRangingBeacons(satisfying: constraint)
+                let beaconRegion = CLBeaconRegion(beaconIdentityConstraint: constraint, identifier: uuid.uuidString)
+                beaconRegion.notifyEntryStateOnDisplay = true  // 디스플레이가 켜져있을 때도 감지
+                beaconRegion.notifyOnEntry = true  // 영역 진입 시 알림
+                beaconRegion.notifyOnExit = true   // 영역 이탈 시 알림
+                
+                self.locationManager.startMonitoring(for: beaconRegion)
+                self.locationManager.startRangingBeacons(satisfying: constraint)
 
-            print("📡 기본 UUID 감지 시작: \(uuid.uuidString)")
+                print("📡 기본 UUID 감지 시작: \(uuid.uuidString)")
+//            print("📱 Location Authorization Status: \(locationManager.authorizationStatus.rawValue)")
+//            print("🔵 Bluetooth State: \(bluetoothManager?.state.rawValue ?? -1)")
+            }
         }
     }
 
@@ -105,28 +120,7 @@ class RangeBeaconViewController: UIViewController, CLLocationManagerDelegate, CB
 
     // MARK: - Beacon Monitoring Methods
     func updateBeaconMonitoring() {
-        // 기존 모니터링 중지
-        for constraint in beaconConstraints.keys {
-            if let region = locationManager.monitoredRegions.first(where: { $0.identifier == constraint.uuid.uuidString }) {
-                locationManager.stopMonitoring(for: region)
-                locationManager.stopRangingBeacons(satisfying: constraint)
-            }
-        }
-        beaconConstraints.removeAll()
-        
-        // 현재 수업의 UUID로 새로운 모니터링 시작
-        if let currentClass = DailyDataManager.shared.getCurrentClass(),
-           let uuid = UUID(uuidString: currentClass.beaconInfo.uuid) {
-            let constraint = CLBeaconIdentityConstraint(uuid: uuid, major: 100, minor: 0)
-            self.beaconConstraints[constraint] = []
-
-            let beaconRegion = CLBeaconRegion(beaconIdentityConstraint: constraint, identifier: uuid.uuidString)
-            self.locationManager.startMonitoring(for: beaconRegion)
-            self.locationManager.startRangingBeacons(satisfying: constraint)
-
-            print("📡 현재 수업 비콘 UUID 감지 시작: \(uuid.uuidString)")
-            hasSentRequest = false  // 새로운 수업이 시작되면 출석 요청 플래그 초기화
-        }
+        startBeaconMonitoring()  // 모든 UUID 다시 시작
     }
 
     func locationManager(_ manager: CLLocationManager, didRange beacons: [CLBeacon], satisfying beaconConstraint: CLBeaconIdentityConstraint) {
@@ -135,13 +129,6 @@ class RangeBeaconViewController: UIViewController, CLLocationManagerDelegate, CB
         // 현재 수업이 있는지 확인
         guard let currentClass = DailyDataManager.shared.getCurrentClass() else {
             print("⚠️ 현재 진행 중인 수업이 없음")
-            return
-        }
-        
-        // 현재 감지된 비콘이 현재 수업의 비콘과 일치하는지 확인
-        if beaconConstraint.uuid.uuidString != currentClass.beaconInfo.uuid {
-            print("⚠️ 현재 수업의 비콘이 아님 - 감지 중지")
-            updateBeaconMonitoring()  // 현재 수업의 비콘으로 업데이트
             return
         }
         
@@ -245,17 +232,6 @@ class RangeBeaconViewController: UIViewController, CLLocationManagerDelegate, CB
                 print("✅ 요청 완료 - 응답 코드: \(httpResponse.statusCode)")
             }
 
-            // if let data = data,
-            //    let responseString = String(data: data, encoding: .utf8) {
-            //     print("📦 응답 데이터: \(responseString)")
-                
-            //     // 응답이 "success"일 때 출석 상태 업데이트
-            //     if responseString.contains("success") {
-            //         DispatchQueue.main.async {
-            //             self?.attendanceViewModel?.updateAttendanceStatusForBeacon(classroom: "Building 302")
-            //         }
-            //     }
-            // }
             if let data = data {
                 do {
                     if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
@@ -263,11 +239,14 @@ class RangeBeaconViewController: UIViewController, CLLocationManagerDelegate, CB
                        message == "Attendance updated" {
                         print("✅ 출석 업데이트 성공")
                         // 서버 응답이 성공이면 프론트엔드 상태 업데이트
-                        DispatchQueue.main.async {
+                        DispatchQueue.main.async { [weak self] in
+                            guard let self = self else { return }
                             // 캐시 업데이트
                             DailyDataManager.shared.updateClassStatus(classroom: classInfo.classroom, status: .ongoing)
                             // ViewModel 업데이트
-                            self?.attendanceViewModel?.fetchDailySchedule()
+                            self.attendanceViewModel?.fetchDailySchedule()
+                            // 비콘 모니터링 재시작
+                            self.startBeaconMonitoring()
                         }
                     }
                 } catch {

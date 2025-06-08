@@ -14,6 +14,10 @@ struct AttendanceView: View {
     var body: some View {
         NavigationView {
             ZStack {
+                // 비콘 모니터링 뷰
+                RangeBeaconView(attendanceViewModel: viewModel)
+                    .edgesIgnoringSafeArea(.all)
+                
                 // 배경 그라데이션
                 LinearGradient(
                     gradient: Gradient(colors: [Color.blue, Color.purple]),
@@ -21,6 +25,7 @@ struct AttendanceView: View {
                     endPoint: .bottomTrailing
                 )
                 .ignoresSafeArea()
+                .allowsHitTesting(false)
                 
                 VStack(spacing: 0) {
                     // 헤더
@@ -41,7 +46,6 @@ struct AttendanceView: View {
                         .padding(.top, 20)
                     }
                 }
-                
             }
         }
         .alert("수업 중 퇴실 확인", isPresented: $viewModel.showPreventionAlert) {
