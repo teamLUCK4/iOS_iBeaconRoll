@@ -37,7 +37,9 @@ class AttendanceViewModel: ObservableObject {
     }
     
     private func startTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: 600, repeats: true) { _ in
+        print("⏰ 스케줄 업데이트 타이머 시작 (10초 간격)")
+        timer = Timer.scheduledTimer(withTimeInterval: 10, repeats: true) { _ in
+            print("🔄 10초 주기 스케줄 업데이트 실행")
             self.fetchDailySchedule()
         }
     }
@@ -60,6 +62,7 @@ class AttendanceViewModel: ObservableObject {
      * - 로딩 상태와 에러 처리 포함
      */
     func fetchDailySchedule() {
+        print("📅 일일 스케줄 데이터 가져오기 시작")
         isLoading = true
         error = nil
         
@@ -67,8 +70,14 @@ class AttendanceViewModel: ObservableObject {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let schedule):
+                    print("✅ 스케줄 업데이트 성공")
+                    print("📚 현재 수업 목록:")
+                    for classInfo in schedule.classes {
+                        print("- \(classInfo.subjectName) (\(classInfo.startTime) ~ \(classInfo.endTime))")
+                    }
                     self?.schedules = schedule.classes
                 case .failure(let error):
+                    print("❌ 스케줄 업데이트 실패: \(error.localizedDescription)")
                     self?.error = error
                 }
                 self?.isLoading = false

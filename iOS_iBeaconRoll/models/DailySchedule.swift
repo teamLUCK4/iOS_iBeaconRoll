@@ -58,8 +58,8 @@ struct Class: Codable {
     let startTime: String
     let endTime: String
     let classroom: String
-    var status: Status                      // 수업 상태 정보
-    var attendanceTime: AttendanceTime      // 출석 시간 정보
+    var status: Status
+    var attendanceTime: AttendanceTime
     var attendanceStatus: AttendanceStatus
     let beaconInfo: BeaconInfo
     
@@ -84,6 +84,7 @@ struct Class: Codable {
         formatter.dateFormat = "HH:mm:ss"
         return formatter.date(from: startTime) ?? Date()
     }
+    
     // 종료 시간을 Date 객체로 변환
     var endTimeDate: Date {
         let formatter = DateFormatter()
@@ -92,7 +93,7 @@ struct Class: Codable {
     }
 }
 
-// **수업** 상태 정보
+// 수업 상태 정보
 struct Status: Codable {
     let string: String
     let valid: Bool
@@ -142,7 +143,6 @@ enum AttendanceType {
         }
     }
 }
-
 
 struct BeaconInfo: Codable {
     let id: String

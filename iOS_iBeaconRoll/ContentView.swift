@@ -22,7 +22,7 @@ struct ContentView: View {
             AttendanceView(viewModel: viewModel)
         } else {
             ZStack {
-                RangeBeaconView()
+                RangeBeaconView(attendanceViewModel: viewModel)
                 
                 // 배경 그라데이션
                 LinearGradient(
@@ -107,7 +107,7 @@ struct ContentView: View {
                 }
                 
                 // RangeBeaconView 오버레이 (반투명)
-                RangeBeaconView()
+                RangeBeaconView(attendanceViewModel: viewModel)
                     .edgesIgnoringSafeArea(.all)
                     .opacity(0.3)
             }
@@ -128,7 +128,7 @@ struct ContentView: View {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let data):
-                    print("✅ Fetched data: \(data)")
+                     print("✅ Fetched data: \(data)")
                     self.isDataLoaded = true
                     
                     // 데이터 로드 완료 후 2초 뒤 자동으로 출석 화면으로 전환

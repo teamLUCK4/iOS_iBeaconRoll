@@ -9,11 +9,15 @@ import SwiftUI
 import UIKit
 
 struct RangeBeaconView: UIViewControllerRepresentable {
+    var attendanceViewModel: AttendanceViewModel
+    
     func makeUIViewController(context: Context) -> RangeBeaconViewController {
-        return RangeBeaconViewController()
+        let viewController = RangeBeaconViewController()
+        viewController.attendanceViewModel = attendanceViewModel
+        return viewController
     }
-
+    
     func updateUIViewController(_ uiViewController: RangeBeaconViewController, context: Context) {
-        // 업데이트 필요 없음
+        uiViewController.attendanceViewModel = attendanceViewModel
     }
 }
