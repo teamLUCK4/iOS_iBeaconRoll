@@ -126,7 +126,7 @@ struct ContentView: View {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let data):
-                     print("✅ Fetched data: \(data)")
+                    print("✅ Fetched data",data)
                     self.isDataLoaded = true
                     
                     // 데이터 로드 완료 후 2초 뒤 자동으로 출석 화면으로 전환

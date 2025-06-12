@@ -12,7 +12,7 @@ class DailyDataManager {
     
     private let cacheKey = "cachedData"
     private let dateKey = "lastFetchDate"
-    private let apiURL = URL(string: "http://192.168.100.125:8080/api/students/1/schedule/today")!
+    private let apiURL = URL(string: "http://43.203.147.170:8080/api/students/1/schedule/today")!
     
     private init() {}
     
@@ -268,12 +268,12 @@ class DailyDataManager {
             }
             let endTimeInMinutes = endHour * 60 + endMinute
             
-            print("📚 수업 시간: \(startHour):\(startMinute) ~ \(endHour):\(endMinute)")
+            // print("📚 수업 시간: \(startHour):\(startMinute) ~ \(endHour):\(endMinute)")
             
             // 수업 시작 5분 전부터 종료 20분 후까지를 수업 시간으로 간주
-            let bufferTime = 20 // 5분 버퍼
-            return currentTimeInMinutes >= (startTimeInMinutes - bufferTime) && 
-                   currentTimeInMinutes <= (endTimeInMinutes + bufferTime)
+            let bufferTime = 5 // 5분 버퍼
+            return currentTimeInMinutes >= (startTimeInMinutes - bufferTime) &&
+                   currentTimeInMinutes <= (endTimeInMinutes)
         }) {
             print("✅ 찾은 수업: \(foundClass.subjectName) (\(foundClass.classroom))")
             print("📡 수업 비콘 UUID: \(foundClass.beaconInfo.uuid)")

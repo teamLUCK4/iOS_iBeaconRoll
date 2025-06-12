@@ -57,17 +57,21 @@ class AttendanceViewModel: ObservableObject {
     func fetchDailySchedule() {
         print("📅 Fetching daily schedule...")
         if let dailySchedule = DailyDataManager.shared.getCachedData() {
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                print("🔄 이전 상태:", self.schedules.map { "\($0.classroom): \($0.attendanceStatus)" })
                 self.schedules = dailySchedule.classes
-                print("✅ Schedule updated with \(self.schedules.count) classes")
+                print("✅ 새로운 상태:", self.schedules.map { "\($0.classroom): \($0.attendanceStatus)" })
                 self.objectWillChange.send()
             }
+        } else {
+            print("❌ 캐시된 데이터가 없습니다")
         }
     }
     
     func checkIn(at index: Int) {
         schedules[index].attendanceTime = AttendanceTime(string: "", valid: true, time: Date())
-        schedules[index].attendanceStatus = AttendanceStatus.ongoing
+        schedules[index].attendanceStatus = AttendanceStatus.completed
     }
     
     //    func requestCheckOut(at index: Int) {
