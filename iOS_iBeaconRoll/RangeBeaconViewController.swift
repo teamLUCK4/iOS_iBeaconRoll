@@ -250,7 +250,7 @@ class RangeBeaconViewController: UIViewController, CLLocationManagerDelegate, CB
 
     // 통합된 출석 상태 업데이트 함수
     func sendAttendanceStatusUpdate(for classInfo: Class, newStatus: String) {
-        guard let url = URL(string: "http://43.203.147.170:8080/api/attendance") else {
+        guard let url = URL(string: "http://52.78.209.210:8080/api/attendance") else {
             print("❌ URL이 잘못됨")
             return
         }

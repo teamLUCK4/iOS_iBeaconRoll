@@ -110,6 +110,7 @@ struct ContentView: View {
                 }
             }
             .onAppear {
+                DailyDataManager.shared.clearCache()
                 loadDailyData()
             }
         }
@@ -120,7 +121,7 @@ struct ContentView: View {
     private func loadDailyData() {
         print("🚀 Starting daily data load...")
         dataLoadingError = nil
-        
+
         
         DailyDataManager.shared.getDailyData { result in
             DispatchQueue.main.async {

@@ -56,16 +56,20 @@ class AttendanceViewModel: ObservableObject {
      */
     func fetchDailySchedule() {
         print("📅 Fetching daily schedule...")
-        if let dailySchedule = DailyDataManager.shared.getCachedData() {
-            DispatchQueue.main.async { [weak self] in
+        DailyDataManager.shared.getDailyData { [weak self] result in
+            DispatchQueue.main.async {
                 guard let self = self else { return }
-                print("🔄 이전 상태:", self.schedules.map { "\($0.classroom): \($0.attendanceStatus)" })
-                self.schedules = dailySchedule.classes
-                print("✅ 새로운 상태:", self.schedules.map { "\($0.classroom): \($0.attendanceStatus)" })
-                self.objectWillChange.send()
+                switch result {
+                case .success(let dailySchedule):
+                    print("🔄 이전 상태:", self.schedules.map { "\($0.classroom): \($0.attendanceStatus)" })
+                    self.schedules = dailySchedule.classes
+                    print("✅ 새로운 상태:", self.schedules.map { "\($0.classroom): \($0.attendanceStatus)" })
+                    self.objectWillChange.send()
+                case .failure(let error):
+                    print("❌ 스케줄 가져오기 실패: \(error.localizedDescription)")
+                    self.error = error
+                }
             }
-        } else {
-            print("❌ 캐시된 데이터가 없습니다")
         }
     }
     

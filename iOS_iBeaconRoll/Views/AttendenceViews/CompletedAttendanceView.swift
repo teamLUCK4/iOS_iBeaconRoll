@@ -20,7 +20,7 @@ struct CompletedAttendanceView: View {
     
     private var subtitleText: String {
         if schedule.attendanceTime.valid == true {
-            return "입실: \(String(describing: schedule.attendanceTime.time))"
+            return "입실 완료 했습니다"
         }
         return ""
     }
